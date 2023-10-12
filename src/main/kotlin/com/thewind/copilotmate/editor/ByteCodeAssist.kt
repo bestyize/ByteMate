@@ -1,10 +1,9 @@
 package com.thewind.copilotmate.editor
 
 import com.thewind.copilotmate.model.PatchClass
-import com.thewind.copilotmate.model.PatchMethod
 import com.thewind.copilotmate.model.PatchedClass
+import com.thewind.copilotmate.model.entryName
 import javassist.ClassPool
-import javassist.CtClass
 import javassist.CtNewConstructor
 import java.io.File
 import java.util.jar.JarOutputStream
@@ -27,17 +26,16 @@ object ByteCodeAssist {
             }.toTypedArray()
             var cont = try {
                 classToModify.getDeclaredConstructor(paramsTypes)
-            } catch (_:Exception) {
+            } catch (_: Exception) {
                 null
             }
             if (cont == null) {
                 cont = CtNewConstructor.make(paramsTypes, null, "{ ${data.body} }", classToModify)
                 classToModify.addConstructor(cont)
+            } else {
+                cont.setBody("{ ${data.body} }")
             }
-            val newConstructor = CtNewConstructor.make(paramsTypes, null, "{ ${data.body} }", classToModify)
 
-            classToModify.removeConstructor(cont)
-            classToModify.addConstructor(newConstructor)
         }
         patchClass.patchMethods.forEach { data ->
             val methodToModify = classToModify.getDeclaredMethod(data.name)
@@ -52,6 +50,7 @@ object ByteCodeAssist {
     fun packageClassToJar(originalJarPath: String, patchedList: List<PatchedClass>): String? {
         val newJarPath = "$originalJarPath.crack.jar"
         try {
+            val entrySet = patchedList.map { it.entryName }.toSet()
             // Create a new JAR file
             val newJar = JarOutputStream(File(newJarPath).outputStream())
 
@@ -59,15 +58,18 @@ object ByteCodeAssist {
             ZipInputStream(File(originalJarPath).inputStream()).use { originalZip ->
                 while (true) {
                     val entry = originalZip.nextEntry ?: break
-                    newJar.putNextEntry(ZipEntry(entry.name))
-                    newJar.write(originalZip.readBytes())
-                    newJar.closeEntry()
+                    if (!entrySet.contains(entry.name)) {
+                        newJar.putNextEntry(ZipEntry(entry.name))
+                        newJar.write(originalZip.readBytes())
+                        newJar.closeEntry()
+                    }
+
                 }
             }
 
             // Add the new class to the new JAR
             patchedList.forEach { data ->
-                newJar.putNextEntry(ZipEntry(data.className))
+                newJar.putNextEntry(ZipEntry(data.entryName))
                 File(data.classFilePath).inputStream().use { input ->
                     newJar.write(input.readBytes())
                 }

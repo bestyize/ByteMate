@@ -6,6 +6,7 @@ import com.thewind.copilotmate.model.PatchClass
 import com.thewind.copilotmate.model.PatchConstructor
 import com.thewind.copilotmate.model.PatchMethod
 import com.thewind.copilotmate.model.PatchedClass
+import javassist.ClassPool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -13,11 +14,14 @@ suspend fun main() = withContext(Dispatchers.IO) {
 
     val jarPath = "E:\\core.jar"
     println("start generate class")
+    ClassPool.getDefault().insertClassPath("C:\\Users\\read\\AppData\\Local\\Programs\\IntelliJ IDEA Ultimate\\lib\\app-client.jar")
+    ClassPool.getDefault().insertClassPath("C:\\Users\\read\\AppData\\Local\\Programs\\IntelliJ IDEA Ultimate\\lib\\util-8.jar")
     val patchedList = listOf(
         FunctionPatcher.mockLoginStatus(jarPath),
-//        FunctionPatcher.mockLoginStatusParser(jarPath),
+        FunctionPatcher.mockLoginStatusParser(jarPath),
         FunctionPatcher.enableAllCopilotFeature(jarPath),
-//        FunctionPatcher.mockLoginTypeParser(jarPath)
+        FunctionPatcher.mockLoginTypeParser(jarPath),
+        FunctionPatcher.mockAgentGitHubService(jarPath)
     )
     println("start pack to jar")
     ByteCodeAssist.packageClassToJar(originalJarPath = jarPath, patchedList = patchedList)
@@ -77,12 +81,26 @@ object FunctionPatcher {
                     """.trimIndent()
                     ),
                     PatchMethod("isError", "return false;"),
-                    PatchMethod("forFailedToGetToken", """
-                        return new com.github.copilot.lang.agent.commands.AuthStatusResult(${makeClassName(className, "Status")}.Ok, "yize", null);
-                    """.trimIndent()),
-                    PatchMethod("forError", """
-                        return new com.github.copilot.lang.agent.commands.AuthStatusResult(${makeClassName(className, "Status")}.Ok, "yize", null);
-                    """.trimIndent())
+                    PatchMethod(
+                        "forFailedToGetToken", """
+                        return new com.github.copilot.lang.agent.commands.AuthStatusResult(${
+                            makeClassName(
+                                className,
+                                "Status"
+                            )
+                        }.Ok, "yize", null);
+                    """.trimIndent()
+                    ),
+                    PatchMethod(
+                        "forError", """
+                        return new com.github.copilot.lang.agent.commands.AuthStatusResult(${
+                            makeClassName(
+                                className,
+                                "Status"
+                            )
+                        }.Ok, "yize", null);
+                    """.trimIndent()
+                    )
                 ),
                 patchConstructors = listOf(
                     PatchConstructor(
@@ -91,6 +109,13 @@ object FunctionPatcher {
                             String::class.java.name,
                             String::class.java.name
                         ),
+                        body = """
+                            this.user = "yize";
+                            this.status = ${makeClassName(className, "Status")}.Ok;
+                            this.errorMessage = null;
+                        """.trimIndent()
+                    ),
+                    PatchConstructor(
                         body = """
                             this.user = "yize";
                             this.status = ${makeClassName(className, "Status")}.Ok;
@@ -132,16 +157,16 @@ object FunctionPatcher {
                     PatchMethod("isSignedIn", "return true;"),
                     PatchMethod(
                         "refreshStatus", """
-                        this.status = new com.github.copilot.lang.agent.commands.AuthStatusResult(null, null, null);
+                        this.status = com.github.copilot.lang.agent.commands.AuthStatusResult.forFailedToGetToken();
                     """.trimIndent()
                     ),
                     PatchMethod(
                         "getStatus",
-                        "return new com.github.copilot.lang.agent.commands.AuthStatusResult(null, null, null);"
+                        "return com.github.copilot.lang.agent.commands.AuthStatusResult.forFailedToGetToken();"
                     ),
                     PatchMethod(
                         "confirmSignIn",
-                        "return new com.github.copilot.lang.agent.commands.AuthStatusResult(null, null, null);"
+                        "return com.github.copilot.lang.agent.commands.AuthStatusResult.forFailedToGetToken();"
                     )
                 )
             )

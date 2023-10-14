@@ -10,4 +10,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "CopilotMate"
+rootProject.name = "ByteMate"

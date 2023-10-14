@@ -1,36 +1,31 @@
-import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.clickable
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.application
+import com.thewind.copilotmate.core.FunctionPatcher
+import com.thewind.copilotmate.editor.ByteCodeAssist
+import javassist.ClassPool
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
+//fun main() = application {
+//    Window(onCloseRequest = ::exitApplication) {
+//        App()
+//    }
+//}
 
-@Composable
-@Preview
-fun App() {
-    var text by remember { mutableStateOf("Hello, World!") }
+suspend fun main() = withContext(Dispatchers.IO) {
 
-    MaterialTheme {
-        Button(onClick = {
-            text = "Hello, Desktop!"
-        }) {
-            Text(text, modifier = Modifier.clickable {
-
-            })
-        }
-    }
-}
-
-fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        App()
-    }
+    val jarPath = "E:\\core.jar"
+    println("start generate class")
+    ClassPool.getDefault()
+        .insertClassPath("C:\\Users\\read\\AppData\\Local\\Programs\\IntelliJ IDEA Ultimate\\lib\\app-client.jar")
+    ClassPool.getDefault()
+        .insertClassPath("C:\\Users\\read\\AppData\\Local\\Programs\\IntelliJ IDEA Ultimate\\lib\\util-8.jar")
+    val patchedList = listOf(
+        FunctionPatcher.mockLoginStatus(jarPath),
+        FunctionPatcher.mockLoginStatusParser(jarPath),
+        FunctionPatcher.enableAllCopilotFeature(jarPath),
+        FunctionPatcher.mockLoginTypeParser(jarPath),
+        FunctionPatcher.mockAgentGitHubService(jarPath)
+    )
+    println("start pack to jar")
+    ByteCodeAssist.packageClassToJar(originalJarPath = jarPath, patchedList = patchedList)
+    println("end pack to jar")
 }

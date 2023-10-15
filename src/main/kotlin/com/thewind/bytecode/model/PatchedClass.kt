@@ -1,4 +1,4 @@
-package com.thewind.copilotmate.model
+package com.thewind.bytecode.model
 
 data class PatchedClass(val className: String, val classFilePath: String)
 

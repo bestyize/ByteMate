@@ -1,14 +1,11 @@
-package com.thewind.copilotmate.core
+package com.thewind.bytecode.core
 
-import com.thewind.copilotmate.editor.ByteCodeAssist
-import com.thewind.copilotmate.editor.ByteCodeAssist.makeClassName
-import com.thewind.copilotmate.model.PatchClass
-import com.thewind.copilotmate.model.PatchConstructor
-import com.thewind.copilotmate.model.PatchMethod
-import com.thewind.copilotmate.model.PatchedClass
-import javassist.ClassPool
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.thewind.bytecode.editor.ByteCodeAssist
+import com.thewind.bytecode.editor.ByteCodeAssist.makeClassName
+import com.thewind.bytecode.model.PatchClass
+import com.thewind.bytecode.model.PatchConstructor
+import com.thewind.bytecode.model.PatchMethod
+import com.thewind.bytecode.model.PatchedClass
 
 object FunctionPatcher {
 

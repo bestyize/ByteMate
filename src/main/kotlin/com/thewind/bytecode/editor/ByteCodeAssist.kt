@@ -1,8 +1,8 @@
-package com.thewind.copilotmate.editor
+package com.thewind.bytecode.editor
 
-import com.thewind.copilotmate.model.PatchClass
-import com.thewind.copilotmate.model.PatchedClass
-import com.thewind.copilotmate.model.entryName
+import com.thewind.bytecode.model.PatchClass
+import com.thewind.bytecode.model.PatchedClass
+import com.thewind.bytecode.model.entryName
 import javassist.ClassPool
 import javassist.CtNewConstructor
 import java.io.File

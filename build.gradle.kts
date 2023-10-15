@@ -36,7 +36,7 @@ compose.desktop {
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Exe, TargetFormat.Deb)
-            packageName = "CopilotMate"
+            packageName = "ByteMate"
             packageVersion = "1.0.0"
         }
     }

@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.thewind.widget.NoticeDialog
 import com.thewind.hacker.editor.HackHexEditor.suspendScanTargetFile
 import com.thewind.hacker.vm.HexHackPageViewModel
-import com.thewind.util.toJson
 import com.thewind.theme.LocalColors
+import com.thewind.util.toJson
+import com.thewind.widget.ComposeFileChooser
+import com.thewind.widget.FileSelectionMode
+import com.thewind.widget.NoticeDialog
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -36,6 +38,7 @@ fun HexSearchPage(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
+
             TextField(
                 colors = TextFieldDefaults.textFieldColors(
                     textColor = LocalColors.current.Text1,
@@ -50,7 +53,26 @@ fun HexSearchPage(
                 value = pageState.path, onValueChange = {
                     vm.updatePath(path = it)
                 }, placeholder = {
-                    Text(text = "点击此处输入目标软件的根目录，例如\nC:\\Program Files\\Adobe\\Adobe Photoshop 2024")
+                    Text(
+                        text = "点击此处输入目标软件的根目录，例如C:\\Program Files\\Adobe\\Adobe Photoshop 2024",
+                        fontSize = 14.sp
+                    )
+                }, trailingIcon = {
+                    Box(
+                        modifier = Modifier
+                            .background(color = LocalColors.current.AdobeBlue, shape = RoundedCornerShape(100.dp))
+                            .wrapContentSize().padding(5.dp)
+                    ) {
+                        ComposeFileChooser(
+                            textSize = 14.sp,
+                            text = "选择",
+                            textColor = LocalColors.current.AdobeMediumBlue,
+                            modifier = Modifier.wrapContentSize().align(Alignment.BottomEnd),
+                            selectionMode = FileSelectionMode.FILES_AND_DIRECTORIES,
+                            onSelected = {
+                                vm.updatePath(it)
+                            })
+                    }
                 },
                 modifier = Modifier.padding(20.dp).fillMaxWidth()
             )
@@ -70,7 +92,10 @@ fun HexSearchPage(
                 value = pageState.featureCode, onValueChange = {
                     vm.updateFeatureCode(it)
                 }, placeholder = {
-                    Text(text = "点击此处输入特征码，如有通配符请用??替代，例如\nC7 41 04 05 00 00 00 ?? 01 00 00 00")
+                    Text(
+                        text = "点击此处输入特征码，如有通配符请用??替代，例如\nC7 41 04 05 00 00 00 ?? 01 00 00 00",
+                        fontSize = 14.sp
+                    )
                 },
                 modifier = Modifier.padding(20.dp).fillMaxWidth()
             )

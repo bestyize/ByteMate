@@ -21,6 +21,8 @@ import com.thewind.hacker.editor.HackHexEditor
 import com.thewind.hacker.vm.HexHackPageViewModel
 import com.thewind.theme.LocalColors
 import com.thewind.util.toJson
+import com.thewind.widget.ComposeFileChooser
+import com.thewind.widget.FileSelectionMode
 import com.thewind.widget.NoticeDialog
 import kotlinx.coroutines.*
 import java.io.File
@@ -47,11 +49,31 @@ fun StringSearchPage(
                     disabledIndicatorColor = Color.Transparent,
                     placeholderColor = LocalColors.current.Text3
                 ),
+                trailingIcon = {
+                    Box(
+                        modifier = Modifier
+                            .background(color = LocalColors.current.AdobeBlue, shape = RoundedCornerShape(100.dp))
+                            .wrapContentSize().padding(5.dp)
+                    ) {
+                        ComposeFileChooser(
+                            textSize = 14.sp,
+                            text = "选择",
+                            textColor = LocalColors.current.AdobeMediumBlue,
+                            modifier = Modifier.wrapContentSize().align(Alignment.BottomEnd),
+                            selectionMode = FileSelectionMode.FILES_AND_DIRECTORIES,
+                            onSelected = {
+                                vm.updatePath(it)
+                            })
+                    }
+                },
                 maxLines = 10,
                 value = pageState.path, onValueChange = {
                     vm.updatePath(path = it)
                 }, placeholder = {
-                    Text(text = "点击此处输入目标软件的根目录，例如\nC:\\Program Files\\Adobe\\Adobe Photoshop 2024")
+                    Text(
+                        text = "点击此处输入目标软件的根目录，例如C:\\Program Files\\Adobe\\Adobe Photoshop 2024",
+                        fontSize = 14.sp
+                    )
                 },
                 modifier = Modifier.padding(20.dp).fillMaxWidth()
             )
@@ -71,7 +93,7 @@ fun StringSearchPage(
                 value = pageState.featureCode, onValueChange = {
                     vm.updateFeatureCode(it)
                 }, placeholder = {
-                    Text(text = "点击此处输入 待搜索字符串")
+                    Text(text = "点击此处输入 待搜索字符串", fontSize = 14.sp)
                 },
                 modifier = Modifier.padding(20.dp).fillMaxWidth()
             )

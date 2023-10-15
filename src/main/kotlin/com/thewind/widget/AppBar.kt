@@ -43,13 +43,18 @@ fun TopAppBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier.height(1.5.dp).background(color = LocalColors.current.Text1).width(10.dp)
+                modifier = Modifier.height(20.dp)
                     .clickable(interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                         onClick = {
                             onMin.invoke()
-                        })
-            )
+                        }),
+                contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier.height(1.5.dp).background(color = LocalColors.current.Text1).width(10.dp)
+                )
+            }
             Spacer(modifier = Modifier.width(15.dp))
             Icon(
                 imageVector = Icons.Default.Close,

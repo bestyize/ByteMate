@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,25 +17,23 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.thewind.bytecode.core.FunctionPatcher
-import com.thewind.bytecode.editor.ByteCodeAssist
 import com.thewind.main.MainPage
 import com.thewind.theme.AppTheme
 import com.thewind.theme.LocalColors
 import com.thewind.widget.TopAppBar
-import javassist.ClassPool
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 
 fun main() = application {
     val windowSize = remember { DpSize(380.dp, 700.dp) }
-    val windowState = rememberWindowState(size = windowSize, position = WindowPosition(Alignment.Center))
+    val windowState =
+        rememberWindowState(size = windowSize, isMinimized = false, position = WindowPosition(Alignment.CenterEnd))
+    val scope = rememberCoroutineScope()
     Window(
         onCloseRequest = ::exitApplication,
         resizable = true,
         transparent = true,
         undecorated = true,
-        alwaysOnTop = true,
+        alwaysOnTop = false,
         state = windowState,
         icon = painterResource("drawable/icon.webp")
     ) {
@@ -44,7 +43,11 @@ fun main() = application {
                     .border(width = 0.5.dp, color = LocalColors.current.Ga3, shape = RoundedCornerShape(10.dp))
             ) {
                 WindowDraggableArea(modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                    TopAppBar(title = "ByteMate", onMin = {}, onClose = {
+                    TopAppBar(title = "ByteMate", onMin = {
+                        scope.launch {
+                            windowState.isMinimized = true
+                        }
+                    }, onClose = {
                         exitApplication()
                     })
                 }

@@ -25,6 +25,9 @@ dependencies {
     implementation("org.javassist:javassist:3.29.2-GA")
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation("com.google.code.gson:gson:2.10.1")
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    implementation("org.xerial:sqlite-jdbc:3.43.2.0")
+
 
 
 

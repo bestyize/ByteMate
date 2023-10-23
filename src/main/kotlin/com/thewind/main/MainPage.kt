@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.thewind.bytecode.page.ByteCodeModifyPage
+import com.thewind.database.page.DatabaseParsePage
 import com.thewind.hacker.page.HexSearchPage
 import com.thewind.hacker.page.StringSearchPage
 import com.thewind.main.vm.MainPageViewModel
@@ -59,7 +60,7 @@ fun MainPage(
                     val isSelected = index == pagerState.currentPage
                     Text(text = title,
                         color = if (isSelected) LocalColors.current.AdobeMediumBlue else LocalColors.current.Text1,
-                        fontSize = if (isSelected) 16.sp else 15.sp,
+                        fontSize = if (isSelected) 15.sp else 14.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
@@ -78,6 +79,7 @@ fun MainPage(
                 when (pageIndex) {
                     0 -> HexSearchPage()
                     1 -> StringSearchPage()
+                    2 -> DatabaseParsePage()
                     else -> ByteCodeModifyPage()
                 }
             }

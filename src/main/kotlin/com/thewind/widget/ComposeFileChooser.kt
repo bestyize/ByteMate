@@ -15,13 +15,13 @@ import kotlinx.coroutines.launch
 import javax.swing.JFileChooser
 
 @Composable
-fun ComposeFileChooser(
+internal fun ComposeFileChooser(
     modifier: Modifier,
     text: String = "选择文件夹",
     textColor: Color = LocalColors.current.Text1,
     textSize: TextUnit = 14.sp,
     title: String = "选择文件夹",
-    selectionMode: FileSelectionMode = FileSelectionMode.FILES_AND_DIRECTORIES,
+    selectionMode: FileSelectionMode,
     onSelected: (String) -> Unit = {},
     onCancel: () -> Unit = {}
 ) {

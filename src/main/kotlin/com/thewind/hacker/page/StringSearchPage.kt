@@ -21,9 +21,7 @@ import com.thewind.hacker.editor.HackHexEditor
 import com.thewind.hacker.vm.HexHackPageViewModel
 import com.thewind.theme.LocalColors
 import com.thewind.util.toJson
-import com.thewind.widget.ComposeFileChooser
-import com.thewind.widget.FileSelectionMode
-import com.thewind.widget.NoticeDialog
+import com.thewind.widget.*
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -39,64 +37,19 @@ fun StringSearchPage(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.align(Alignment.Center)) {
-            TextField(
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = LocalColors.current.Text1,
-                    disabledTextColor = LocalColors.current.Text1,
-                    backgroundColor = LocalColors.current.Bg3,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    placeholderColor = LocalColors.current.Text3
-                ),
-                trailingIcon = {
-                    Box(
-                        modifier = Modifier
-                            .background(color = LocalColors.current.AdobeBlue, shape = RoundedCornerShape(100.dp))
-                            .wrapContentSize().padding(5.dp)
-                    ) {
-                        ComposeFileChooser(
-                            textSize = 14.sp,
-                            text = "选择",
-                            textColor = LocalColors.current.AdobeMediumBlue,
-                            modifier = Modifier.wrapContentSize().align(Alignment.BottomEnd),
-                            selectionMode = FileSelectionMode.FILES_AND_DIRECTORIES,
-                            onSelected = {
-                                vm.updatePath(it)
-                            })
-                    }
-                },
-                maxLines = 10,
-                value = pageState.path, onValueChange = {
-                    vm.updatePath(path = it)
-                }, placeholder = {
-                    Text(
-                        text = "点击此处输入目标软件的根目录，例如C:\\Program Files\\Adobe\\Adobe Photoshop 2024",
-                        fontSize = 14.sp
-                    )
-                },
-                modifier = Modifier.padding(20.dp).fillMaxWidth()
-            )
+            FileSelectField(
+                modifier = Modifier.padding(20.dp).fillMaxWidth(),
+                path = pageState.path, onPathChange = {
+                    vm.updatePath(it)
+                })
             Spacer(modifier = Modifier.height(10.dp))
 
-            TextField(
-                colors = TextFieldDefaults.textFieldColors(
-                    textColor = LocalColors.current.Text1,
-                    disabledTextColor = LocalColors.current.Text1,
-                    backgroundColor = LocalColors.current.Bg3,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent,
-                    placeholderColor = LocalColors.current.Text3
-                ),
-                maxLines = 10,
-                value = pageState.featureCode, onValueChange = {
+            DefaultTextField(modifier = Modifier.padding(20.dp).fillMaxWidth(),
+                text = pageState.featureCode,
+                hint = "点击此处输入 待搜索字符串",
+                onTextChange = {
                     vm.updateFeatureCode(it)
-                }, placeholder = {
-                    Text(text = "点击此处输入 待搜索字符串", fontSize = 14.sp)
-                },
-                modifier = Modifier.padding(20.dp).fillMaxWidth()
-            )
+                })
             Spacer(modifier = Modifier.height(10.dp))
             Box(
                 modifier = Modifier.padding(20.dp)

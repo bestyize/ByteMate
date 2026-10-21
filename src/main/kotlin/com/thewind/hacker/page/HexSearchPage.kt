@@ -1,5 +1,7 @@
 package com.thewind.hacker.page
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,8 +46,10 @@ fun HexSearchPage(
             Spacer(modifier = Modifier.height(10.dp))
             DefaultTextField(modifier = Modifier.padding(20.dp).fillMaxWidth(),
                 text = pageState.featureCode,
-                hint = "点击此处输入特征码，如有通配符请用??替代，例如\n" +
-                        "C7 41 04 05 00 00 00 ?? 01 00 00 00",
+                hint = I18n.text(
+                    "Enter a hex pattern (?? = wildcard), e.g.\nC7 41 04 05 00 00 00 ?? 01 00 00 00",
+                    "点击此处输入特征码，如有通配符请用 ?? 替代，例如\nC7 41 04 05 00 00 00 ?? 01 00 00 00"
+                ),
                 onTextChange = {
                     vm.updateFeatureCode(it)
                 })
@@ -81,7 +85,7 @@ fun HexSearchPage(
                     }
             ) {
                 Text(
-                    text = "搜索文件/文件夹特征码",
+                    text = I18n.text("Search hex patterns in files / folders", "搜索文件/文件夹特征码"),
                     fontSize = 18.sp,
                     color = LocalColors.current.AdobeMediumBlue,
                     modifier = Modifier.padding(vertical = 15.dp).wrapContentSize().align(Alignment.Center)
@@ -91,7 +95,7 @@ fun HexSearchPage(
 
         if (pageState.operateLog.isNotEmpty()) {
             Text(
-                text = pageState.operateLog,
+                text = I18n.translate(pageState.operateLog),
                 fontSize = 12.sp,
                 color = LocalColors.current.AdobeMediumBlue,
                 maxLines = 5,

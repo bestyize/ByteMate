@@ -1,5 +1,7 @@
 package com.thewind.bytecode.business.inteiilj.page
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,7 +37,7 @@ fun IntellijPatchPage() {
             FileSelectField(
                 modifier = Modifier.padding(20.dp).fillMaxWidth(), path = pageState.installPath, onPathChange = {
                     vm.updateInstallPath(it)
-                }, hint = pageState.pathHint
+                }, hint = I18n.text("Enter an IDE installation directory", "输入或选择 IDE 安装路径")
             )
             Box(modifier = Modifier.padding(20.dp)
                 .background(color = LocalColors.current.AdobeBlue, shape = RoundedCornerShape(100.dp)).fillMaxWidth()
@@ -45,7 +47,7 @@ fun IntellijPatchPage() {
                     }
                 }) {
                 Text(
-                    text = "执行破解",
+                    text = I18n.text("Apply patch", "执行破解"),
                     fontSize = 18.sp,
                     color = LocalColors.current.AdobeMediumBlue,
                     modifier = Modifier.padding(vertical = 15.dp).wrapContentSize().align(Alignment.Center)
@@ -64,7 +66,7 @@ fun IntellijPatchPage() {
 @Preview
 private fun NoticeTips(notice: String) {
     Text(
-        text = notice,
+        text = I18n.translate(notice),
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
         color = LocalColors.current.Text2,

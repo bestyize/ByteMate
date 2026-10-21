@@ -1,0 +1,78 @@
+name: Desktop build and release
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    name: Package ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: windows
+            os: windows-2022
+          - platform: macos
+            os: macos-15
+          - platform: linux
+            os: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Install WiX (Windows MSI)
+        if: runner.os == 'Windows'
+        run: choco install wixtoolset --yes --no-progress
+      - name: Compile and test
+        shell: bash
+        run: ./gradlew --no-daemon build
+      - name: Create native installer
+        shell: bash
+        run: |
+          version="1.0.0"
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            version="${GITHUB_REF_NAME#v}"
+          fi
+          ./gradlew --no-daemon packageDistributionForCurrentOS "-PreleaseVersion=$version"
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: bytemate-${{ matrix.platform }}
+          if-no-files-found: error
+          path: |
+            build/compose/binaries/main/**/*.msi
+            build/compose/binaries/main/**/*.dmg
+            build/compose/binaries/main/**/*.deb
+
+  release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: desktop
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: bytemate-*
+          merge-multiple: true
+          path: release-artifacts
+      - name: Publish installers
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-artifacts/*
+          fail_on_unmatched_files: true
+          generate_release_notes: true

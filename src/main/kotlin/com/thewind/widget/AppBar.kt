@@ -1,5 +1,7 @@
 package com.thewind.widget
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -42,6 +44,11 @@ fun TopAppBar(
             modifier = Modifier.padding(vertical = 10.dp).wrapContentSize().align(Alignment.CenterEnd),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Text(
+                text = I18n.switchLabel,
+                color = textColor,
+                modifier = Modifier.padding(end = 16.dp).clickable { I18n.toggle() }
+            )
             Box(
                 modifier = Modifier.height(20.dp)
                     .clickable(interactionSource = remember { MutableInteractionSource() },

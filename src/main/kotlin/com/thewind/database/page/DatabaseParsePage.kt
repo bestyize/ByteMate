@@ -1,5 +1,7 @@
 package com.thewind.database.page
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
@@ -27,23 +29,23 @@ fun DatabaseParsePage(vm: DatabaseParsePageViewModel = remember { DatabaseParseP
             FileSelectField(
                 modifier = Modifier.padding(20.dp).fillMaxWidth(),
                 path = pageState.path,
-                hint = remember { "输入或选择.db文件路径" },
+                hint = I18n.text("Enter or browse for a .db file", "输入或选择 .db 文件路径"),
                 onPathChange = {
                     vm.updatePath(it)
                 })
             Spacer(modifier = Modifier.height(10.dp))
-            DefaultOptionBanner(title = "导出为Json", onClick = {
+            DefaultOptionBanner(title = I18n.text("Export as JSON", "导出为 JSON"), onClick = {
                 vm.startConvert(pageState.path)
             })
             Spacer(modifier = Modifier.height(10.dp))
-            DefaultOptionBanner(title = "导出为Excel", onClick = {
+            DefaultOptionBanner(title = I18n.text("Export as CSV", "导出为 CSV"), onClick = {
                 vm.startConvert(pageState.path, isJson = false)
             })
         }
 
         if (pageState.operateLog.isNotEmpty()) {
             Text(
-                text = pageState.operateLog,
+                text = I18n.translate(pageState.operateLog),
                 fontSize = 12.sp,
                 color = LocalColors.current.AdobeMediumBlue,
                 maxLines = 5,

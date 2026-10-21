@@ -1,5 +1,7 @@
 package com.thewind.widget
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,7 +40,7 @@ fun FileSelectField(
         maxLines = 10,
         value = path, onValueChange = onPathChange, placeholder = {
             Text(
-                text = hint ?: "点击此处输入目标软件的根目录，例如C:\\Program Files\\Adobe\\Adobe Photoshop 2024",
+                text = hint ?: I18n.text("Enter a file or directory path", "输入目标文件或目录路径"),
                 fontSize = 14.sp
             )
         }, trailingIcon = {
@@ -49,7 +51,7 @@ fun FileSelectField(
             ) {
                 ComposeFileChooser(
                     textSize = 14.sp,
-                    text = "选择",
+                    text = I18n.text("Browse", "选择"),
                     textColor = LocalColors.current.AdobeMediumBlue,
                     modifier = Modifier.wrapContentSize().align(Alignment.BottomEnd),
                     selectionMode = selectionMode,

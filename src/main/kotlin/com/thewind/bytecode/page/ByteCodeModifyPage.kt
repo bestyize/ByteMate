@@ -1,5 +1,7 @@
 package com.thewind.bytecode.page
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,7 +39,7 @@ fun ByteCodeModifyPage() {
                 .background(color = LocalColors.current.AdobeBlue, shape = RoundedCornerShape(1000.dp))
         ) {
             Text(
-                text = "点此尝试修改jar包",
+                text = I18n.text("Try modifying a JAR file", "点此尝试修改 jar 包"),
                 fontSize = 18.sp,
                 color = LocalColors.current.AdobeMediumBlue,
                 modifier = Modifier.padding(15.dp).wrapContentSize().align(Alignment.Center).clickable {

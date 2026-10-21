@@ -1,5 +1,7 @@
 package com.thewind.widget
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.Text
@@ -17,10 +19,10 @@ import javax.swing.JFileChooser
 @Composable
 internal fun ComposeFileChooser(
     modifier: Modifier,
-    text: String = "选择文件夹",
+    text: String = I18n.text("Choose folder", "选择文件夹"),
     textColor: Color = LocalColors.current.Text1,
     textSize: TextUnit = 14.sp,
-    title: String = "选择文件夹",
+    title: String = I18n.text("Choose folder", "选择文件夹"),
     selectionMode: FileSelectionMode,
     onSelected: (String) -> Unit = {},
     onCancel: () -> Unit = {}
@@ -31,7 +33,7 @@ internal fun ComposeFileChooser(
             JFileChooser().apply {
                 dialogTitle = title
                 fileSelectionMode = selectionMode.mode
-                val action = showDialog(ComposeWindow(), "选择")
+                val action = showDialog(null, I18n.text("Select", "选择"))
                 if (action == JFileChooser.APPROVE_OPTION) {
                     onSelected.invoke(selectedFile.absolutePath)
                 } else {

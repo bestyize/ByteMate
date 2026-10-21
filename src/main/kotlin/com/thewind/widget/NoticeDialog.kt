@@ -1,5 +1,7 @@
 package com.thewind.widget
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,11 +27,12 @@ import com.thewind.theme.LocalColors
 fun NoticeDialog(
     title: String,
     content: String,
-    okText: String = "确定",
+    okText: String = I18n.text("OK", "确定"),
     cancelText: String? = null,
     onOk: () -> Unit = {},
     onCancel: () -> Unit = {}
 ) {
+    val localizedContent = I18n.translate(content)
     Dialog(properties = DialogProperties(usePlatformDefaultWidth = false), onDismissRequest = {
         onCancel.invoke()
     }) {
@@ -46,7 +49,7 @@ fun NoticeDialog(
                     .clickable(indication = null, interactionSource = MutableInteractionSource(), onClick = {})
             ) {
                 Text(
-                    text = title,
+                    text = I18n.translate(title),
                     fontSize = 16.sp,
                     color = LocalColors.current.Text1,
                     modifier = Modifier.padding(vertical = 10.dp).wrapContentSize().align(
@@ -55,8 +58,8 @@ fun NoticeDialog(
                 )
                 Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(color = LocalColors.current.Bg3))
                 val scrollableState = rememberScrollState()
-                if (content.length > 80) {
-                    var text by remember { mutableStateOf(content) }
+                if (localizedContent.length > 80) {
+                    var text by remember(localizedContent) { mutableStateOf(localizedContent) }
                     TextField(
                         colors = TextFieldDefaults.textFieldColors(
                             textColor = LocalColors.current.Text1,
@@ -77,7 +80,7 @@ fun NoticeDialog(
                 } else {
                     SelectionContainer {
                         Text(
-                            text = content,
+                            text = localizedContent,
                             fontSize = 14.sp,
                             color = LocalColors.current.Text2,
                             modifier = Modifier.padding(20.dp).wrapContentSize().align(

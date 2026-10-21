@@ -1,5 +1,7 @@
 package com.thewind.hacker.page
 
+import com.thewind.i18n.I18n
+
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,7 +48,7 @@ fun StringSearchPage(
 
             DefaultTextField(modifier = Modifier.padding(20.dp).fillMaxWidth(),
                 text = pageState.featureCode,
-                hint = "点击此处输入 待搜索字符串",
+                hint = I18n.text("Enter text to search for", "点击此处输入待搜索字符串"),
                 onTextChange = {
                     vm.updateFeatureCode(it)
                 })
@@ -82,7 +84,7 @@ fun StringSearchPage(
                     }
             ) {
                 Text(
-                    text = "搜索文件/文件夹内的字符串",
+                    text = I18n.text("Search text in files / folders", "搜索文件/文件夹内的字符串"),
                     fontSize = 18.sp,
                     color = LocalColors.current.AdobeMediumBlue,
                     modifier = Modifier.padding(vertical = 15.dp).wrapContentSize().align(Alignment.Center)
@@ -92,7 +94,7 @@ fun StringSearchPage(
 
         if (pageState.operateLog.isNotEmpty()) {
             Text(
-                text = pageState.operateLog,
+                text = I18n.translate(pageState.operateLog),
                 fontSize = 12.sp,
                 color = LocalColors.current.AdobeMediumBlue,
                 maxLines = 5,

@@ -21,6 +21,8 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
+    // Material icon artifacts are no longer pulled in transitively by Compose Desktop.
+    implementation(compose.materialIconsExtended)
     implementation("org.javassist:javassist:3.29.2-GA")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.xerial:sqlite-jdbc:3.43.2.0")
